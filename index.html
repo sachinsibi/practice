@@ -371,9 +371,11 @@
             // Keyboard Events
             document.addEventListener('keydown', handleKeyDown);
 
-            // Button Events
+            // Button Events - support both click and touch
             startBtn.addEventListener('click', startGame);
             restartBtn.addEventListener('click', startGame);
+            startBtn.addEventListener('touchend', (e) => { e.preventDefault(); startGame(); });
+            restartBtn.addEventListener('touchend', (e) => { e.preventDefault(); startGame(); });
 
             // Prevent context menu
             document.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -384,13 +386,19 @@
         }
 
         function handleTouchStart(e) {
-            e.preventDefault();
+            // Don't prevent default on buttons so they remain clickable
+            if (e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+            }
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
         }
 
         function handleTouchEnd(e) {
-            e.preventDefault();
+            // Don't prevent default on buttons so they remain clickable
+            if (e.target.tagName !== 'BUTTON') {
+                e.preventDefault();
+            }
             if (!isGameRunning) return;
 
             const touchEndX = e.changedTouches[0].clientX;
